@@ -95,25 +95,21 @@ function contest_reward()
 
     data.last_jumping_state = currently_jumping
 
-    -- Penalización por saltos excesivos
     local jump_penalty = 0
-    local jump_threshold = 5  -- Ajusta este valor según sea necesario
+    local jump_threshold = 5
 
     if data.jump_count > jump_threshold then
-        jump_penalty = - (data.jump_count - jump_threshold) * 8  -- Penalización por cada salto extra
+        jump_penalty = - (data.jump_count - jump_threshold) * 8
     end
 
     reward = reward + jump_penalty
 
-    local inertia_reward = data.inertia * 10  -- Ajusta el factor según sea necesario
+    local inertia_reward = data.inertia * 10
     reward = reward + inertia_reward
 
-    -- Bonificación por completar el nivel rápidamente
     if progress >= 1 then
         reward = reward + (1 - clip(scenario.frame / frame_limit, 0, 1)) * 1500
     end
-
-
 
     return reward
 end
