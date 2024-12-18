@@ -1,14 +1,10 @@
 # PAM Project: Deep Reinforcement Learning in Sonic The Hedgehog
 
-## Introduction:
-The following repository contains the source code of my PAM Project for ACECOM which will mainly be the implementation of PPO in Sonic The Hedgehog with the objective of finishing the first act the most optimum way.
-OpenAI Gymnasium and Stable-Retro APIs will be used to locate and train our model.
+## Introduction
+This repository contains the source code for my PAM project at ACECOM. It implements Proximal Policy Optimization (PPO) in Sonic The Hedgehog with the goal of completing the first zone. The training environment and model are set up using OpenAI Gymnasium and Stable-Retro.
 
 ## Author:
 Ángel Aarón Flores Alberca
-
-![Acecom](resources/acecom_imagen.png)
-![Green hill 1](resources/green_hill.gif)
 
 ## Requisites:
 * Python 3.10
@@ -34,7 +30,7 @@ To activate venv:
 ```
 - On macOS and Linux
 ```bash
-python3 -m venv .venv
+source .venv/bin/activate
 ```
 
 ### 3. Upgrade pip
@@ -47,33 +43,30 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### 5. Edit and run main.py
-Using the IDE of your preference you can access the structure of the project and run [main.py](main.py).
-There you'll find the definition of the model build to play Sonic The Hedgehog. 
-
-In case you'd like to modify it and experiment, I'd recommend to update some of the hyperparameters in multiples of what has already been established.
-What [main.py](main.py) does is to start training the agent using 5 cores of your CPU, this can be edited, in the level defined in [metadata.json](custom_integration/SonicTheHedgehog-Genesis-Custom/metadata.json), you can change it to any of the states saved in said directory.
+### 5. Edit and run `main.py`
+Open [main.py](main.py) in your preferred IDE. Here, you'll find the model definition that trains Sonic to progress through the game. If you’d like to experiment, you can modify hyperparameters by scaling them up or down in multiples of the existing values.
+`main.py` launches the training process using 5 CPU cores by default. You can change the training environment by editing [metadata.json](custom_integration/SonicTheHedgehog-Genesis-Custom/metadata.json), there you can switch to any other state saved in the `custom_integration` directory.
 
 ### 6. Testing the model
-Once the agent has finished its training, there'll be 2 new files which will be used in [testing_model.py](testing_model.py).
-This script will try out what the agent has learnt and export 2 .bk2 files as a result of its attempt, but only the first one is necessary.
-You can also see how the model plays during the running of the script, but it'll be very quickly, so in order to see a more detailed repetition you can render it to video using said files. 
+After training is complete, two new files are generated and used by [testing_model.py](testing_model.py). Running this script will test the trained agent and produce `.bk2` files that record the gameplay. The agent will play very quickly, but you can use these `.bk2` files to render a more detailed video playback later.
 
 ### 7. Render to video
-Before rendering, it's important to do the following: for some reason when trying to integrate our custom environment using **stable-retro** doesn't work, so in order to render the model attempts in video, it's important to move the directory inside of [custom_integration](custom_integration) to [.venv/lib/python3.10/site-packages/retro/data/stable](.venv/lib/python3.10/site-packages/retro/data/stable).
-Once it's done, we execute the following command:
+Before rendering, move the entire `SonicTheHedgehog-Genesis-Custom` directory from [custom_integration](custom_integration) into your virtual environment’s Retro data directory (for example: `.venv/lib/python3.10/site-packages/retro/data/stable`).
+
+Once done, you can render the recorded gameplay into a video using:
 ```bash
 python3 -m retro.scripts.playback_movie SonicTheHedgehog-Genesis-Custom-[Selected zone].[Selected act]-000000.bk2
 ```
 
-### Important note:
-Inside of [custom_integration](custom_integration) there'll be the definition of the custom environment used for the training with the following files:
-* **contest.json**: Declares how are the reward function and done condition being taken. 
-* **data.json**: List of variables in RAM and their respective memory addresses and types to be interpreted correctly.
-* **metadata.json**: Defines what state is the agent playing on.
-* **script.lua**: Mini script made in lua that defines the reward function and the done condition.
+## Important Note
+The custom environment is defined inside the [custom_integration](custom_integration) folder and includes:
+* **contest.json**: Defines how rewards and the done condition are interpreted.
+* **data.json**: Lists RAM variables, their memory addresses, and types.
+* **metadata.json**: Specifies which state the agent will load and play.
+* **script.lua**: A Lua script that defines the reward function and termination condition.
 
-If you want to modify something related to the custom environment, modify [script.lua](custom_integration/SonicTheHedgehog-Genesis-Custom/script.lua) or [metadata.json](custom_integration/SonicTheHedgehog-Genesis-Custom/metadata.json), avoid editing the others.
+To adjust environment behaviors, you can modify [script.lua](custom_integration/SonicTheHedgehog-Genesis-Custom/script.lua) or [metadata.json](custom_integration/SonicTheHedgehog-Genesis-Custom/metadata.json). Avoid editing the other files unless you know what you’re doing.
+
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
