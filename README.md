@@ -3,6 +3,9 @@
 ## Introduction
 This repository contains the source code for my PAM project at ACECOM. It implements Proximal Policy Optimization (PPO) in Sonic The Hedgehog with the goal of completing the first zone. The training environment and model are set up using OpenAI Gymnasium and Stable-Retro.
 
+![ACECOM](resources/acecom_imagen.png) ![Green Hill](resources/green_hill.gif)
+
+
 ## Author:
 Ángel Aarón Flores Alberca
 
