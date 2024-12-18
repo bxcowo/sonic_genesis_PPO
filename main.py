@@ -3,12 +3,12 @@ import os
 
 from stable_baselines3 import PPO
 from stable_baselines3.common.vec_env import SubprocVecEnv, VecNormalize
-from stable_baselines3.common.callbacks import CheckpointCallback
 from gymnasium.wrappers import FrameStackObservation
 from Util_wrappers.SelectRam import SelectRAM, load_data_json
 from Util_wrappers.FrameSkip import FrameSkip
 from Util_wrappers.RestrictedActions import RestrictActions
 
+# Function to create envs
 def make_env():
     curr_dir = os.path.dirname(os.path.abspath(__file__))
     retro.data.Integrations.add_custom_path(os.path.join(curr_dir, "custom_integration"))
@@ -22,6 +22,7 @@ def make_env():
         render_mode=None
         )
 
+    # Involvement in useful wrappers
     env = FrameSkip(env, skip=4)
     data_json_path = os.path.join("custom_integration/SonicTheHedgehog-Genesis-Custom", 'data.json')
     selected_addresses, types = load_data_json(data_json_path)
@@ -31,10 +32,13 @@ def make_env():
     return env
 
 def main():
+    # Number of cores in use
     num_envs = 5
+
     env = SubprocVecEnv([make_env for _ in range(num_envs)])
     env = VecNormalize(env, norm_obs=True, norm_reward=True, clip_obs=10.)
 
+    # Definition of the model and its hyperparameters
     model = PPO(
         policy="MlpPolicy",
         env=env,
@@ -49,14 +53,13 @@ def main():
         verbose=1,
     )
 
-#    checkpoint_callback = CheckpointCallback(save_freq=10000, save_path='modelos/', name_prefix='sonic_model')
-
+    # Definition of the number of iterations the agent gets to play
     model.learn(
         total_timesteps=3_000_000,
-#        callback=checkpoint_callback,
         progress_bar=True
     )
 
+    # Files to save the model
     model.save("sonic_model_final")
     env.save("vec_normalize.pkl")
 

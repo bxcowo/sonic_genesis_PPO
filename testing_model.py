@@ -10,6 +10,7 @@ from Util_wrappers.FrameSkip import FrameSkip
 from Util_wrappers.RestrictedActions import RestrictActions
 from gymnasium.wrappers import FrameStackObservation
 
+# Function to create practice env, it has to be the same as the env defined in main.py with the same wrappers
 def make_env_test():
     curr_dir = os.path.dirname(os.path.abspath(__file__))
     custom_integration_path = os.path.join(curr_dir, "custom_integration")
@@ -36,6 +37,7 @@ def make_env_test():
 
     return env
 
+# Function to let the model play by itself
 def main():
     MODEL_PATH = "sonic_model_final.zip"
     VEC_NORM_PATH = "vec_normalize.pkl"
