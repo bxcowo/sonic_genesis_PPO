@@ -21,7 +21,8 @@ def make_env_test():
         state=retro.State.DEFAULT,
         scenario='contest',
         obs_type=retro.Observations.RAM,
-        render_mode="human"
+        render_mode="human",
+        record=".",
     )
 
     env = FrameSkip(env, skip=4)
@@ -41,6 +42,10 @@ def main():
 
     env = make_env_test()
     env = DummyVecEnv([lambda: env])
+
+    curr_dir = os.path.dirname(os.path.abspath(__file__))
+    custom_integration_path = os.path.join(curr_dir, "custom_integration")
+    retro.data.Integrations.add_custom_path(custom_integration_path)
 
     vec_norm = VecNormalize.load(VEC_NORM_PATH, env)
     vec_norm.training = False

@@ -4,10 +4,6 @@
       "address": 16776721,
       "type": "|u1"
     },
-    "inertia": {
-      "address": 16764948,
-      "type": ">i2"
-    },
     "level_end_bonus": {
       "address": 16775126,
       "type": "|u1"

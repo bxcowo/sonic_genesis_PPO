@@ -19,7 +19,7 @@ def make_env():
         state=retro.State.DEFAULT,
         scenario='contest',
         obs_type=retro.Observations.RAM,
-        render_mode="human"
+        render_mode=None
         )
 
     env = FrameSkip(env, skip=4)
@@ -31,30 +31,29 @@ def make_env():
     return env
 
 def main():
-    num_envs = 4
+    num_envs = 5
     env = SubprocVecEnv([make_env for _ in range(num_envs)])
     env = VecNormalize(env, norm_obs=True, norm_reward=True, clip_obs=10.)
 
     model = PPO(
         policy="MlpPolicy",
         env=env,
-        learning_rate=lambda f: f * 3e-4,
-        n_steps=3200,
-        batch_size=256,
-        n_epochs=20,
+        learning_rate=lambda f: f * 2e-4,
+        n_steps=2048,
+        batch_size=128,
+        n_epochs=7,
         gamma=0.99,
         gae_lambda=0.95,
-        clip_range=0.1,
+        clip_range=0.2,
         ent_coef=0.01,
         verbose=1,
     )
 
-    checkpoint_callback = CheckpointCallback(save_freq=10000, save_path='modelos/',
-                                             name_prefix='sonic_model')
+#    checkpoint_callback = CheckpointCallback(save_freq=10000, save_path='modelos/', name_prefix='sonic_model')
 
     model.learn(
-        total_timesteps=350_000,
-        callback=checkpoint_callback,
+        total_timesteps=3_000_000,
+#        callback=checkpoint_callback,
         progress_bar=True
     )
 

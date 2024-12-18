@@ -69,10 +69,12 @@ class SelectRAM(gym.Wrapper):
 def load_data_json(json_path):
     with open(json_path, 'r') as f:
         data = json.load(f)
+    array_selected = ["onAir", "screen_x", "screen_y", "speed_x", "speed_y", "x", "y"]
     selected_addresses = []
     types = []
     for key in sorted(data['info'].keys(), key=lambda k: data['info'][k]['address']):
-        value = data['info'][key]
-        selected_addresses.append(value['address'])
-        types.append(value['type'])
+        if key in array_selected:
+            value = data['info'][key]
+            selected_addresses.append(value['address'])
+            types.append(value['type'])
     return selected_addresses, types

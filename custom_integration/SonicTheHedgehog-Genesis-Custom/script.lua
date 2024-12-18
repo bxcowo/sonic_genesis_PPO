@@ -1,3 +1,4 @@
+-- Verificado
 level_max_x = {
     -- Green Hill Zone
     ["zone=0,act=0"] = 0x2560,
@@ -30,10 +31,14 @@ level_max_x = {
     -- ["zone=5,act=2"] = 000000, -- no tiene un x máximo
 }
 
+
+-- Verificado
 function level_key()
     return string.format("zone=%d,act=%d", data.zone, data.act)
 end
 
+
+-- Verificado
 function clip(v, min, max)
     if v < min then
         return min
@@ -44,14 +49,18 @@ function clip(v, min, max)
     end
 end
 
+
+-- Verificado
 data.prev_lives = 3
-data.jump_count = 0
+
+data.useless_jumps = 0
 data.last_jumping_state = false
 
 function is_jumping()
     return data.onAir == 1
 end
 
+-- Verificado
 function contest_done()
     if data.lives < data.prev_lives then
         return true
@@ -65,9 +74,13 @@ function contest_done()
     return false
 end
 
+
+-- Verificado
 data.offset_x = nil
 end_x = nil
 
+
+-- Verificado
 function calc_progress(data)
     if data.offset_x == nil then
         data.offset_x = -data.x
@@ -80,35 +93,48 @@ end
 
 data.prev_progress = 0
 frame_limit = 18000
+data.prev_rings = 0
 
 function contest_reward()
     local progress = calc_progress(data)
-    local speed_reward = math.max(data.speed_x, 0) * 0.15
+    local speed_reward = math.max(data.speed_x, 0) * 0.05
     local reward = (progress - data.prev_progress) * 15000 + speed_reward
-    data.prev_progress = progress
+
+    local ring_diff = data.rings - data.prev_rings
+
+    if ring_diff > 0 then
+        reward = reward + ring_diff * 0.05
+    end
+
+    data.prev_rings = data.rings
 
     local currently_jumping = is_jumping()
 
-    if currently_jumping and not data.last_jumping_state then
-        data.jump_count = data.jump_count + 1
+    if currently_jumping then
+        data.useless_jumps = data.useless_jumps + 1
+    else
+        data.useless_jumps = 0
     end
 
-    data.last_jumping_state = currently_jumping
-
-    local jump_penalty = 0
-    local jump_threshold = 5
-
-    if data.jump_count > jump_threshold then
-        jump_penalty = - (data.jump_count - jump_threshold) * 8
+    local jump_penalty_threshold = 30
+    if data.useless_jumps > jump_penalty_threshold then
+        reward = reward - 1
     end
 
-    reward = reward + jump_penalty
+    data.prev_progress = progress
 
-    local inertia_reward = data.inertia * 10
-    reward = reward + inertia_reward
+    if data.lives < data.prev_lives then
+        reward = reward - 500
+    end
+
+    if currently_jumping and (progress > data.prev_progress) then
+        reward = reward + 50
+    end
 
     if progress >= 1 then
-        reward = reward + (1 - clip(scenario.frame / frame_limit, 0, 1)) * 1500
+        reward = reward + 3000 + data.level_end_bonus
+        local time_bonus = (1 - clip(scenario.frame / frame_limit, 0, 1)) * 2000
+        reward = reward + time_bonus
     end
 
     return reward
