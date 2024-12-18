@@ -31,7 +31,7 @@ To activate venv:
 ```
 - On macOS and Linux
 ```bash
-python3 -m venv .venv
+source .venv/bin/activate
 ```
 
 ### 3. Upgrade pip
