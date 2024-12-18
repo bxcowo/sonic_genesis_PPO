@@ -7,6 +7,9 @@ OpenAI Gymnasium and Stable-Retro APIs will be used to locate and train our mode
 ## Author:
 Ángel Aarón Flores Alberca
 
+![Acecom](resources/acecom_imagen.png)
+![Green hill 1](resources/green_hill.gif)
+
 ## Requisites:
 * Python 3.10
 * OS: Windows 10/11, Linux, macOS
